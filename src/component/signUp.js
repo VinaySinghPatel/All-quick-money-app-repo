@@ -9,7 +9,7 @@ const SignUp = (props) => {
       try {
           e.preventDefault();
           let {name,email,password,username,mobilenumber} = Credential;
-          let response = await fetch (`https://quickmoney-backend.onrender.com/api/auth/createuser`,{
+          let response = await fetch (`https://backendofquickmoney.onrender.com/api/auth/createuser`,{
               method : 'POST',
               headers : {
                   'Content-Type' : 'application/json'
@@ -19,8 +19,8 @@ const SignUp = (props) => {
             let json = await response.json();
             console.log(json);
             if(json.Succes){
-              // Save karo Auth-Token aor redirect kar do
-              localStorage.setItem('auth-token', json.Authtoken);
+              // Save karo Authtoken aor redirect kar do
+              localStorage.setItem('Authtoken', json.Authtoken);
               localStorage.setItem('userId', json._id); // Save the userId 
               console.log(json._id);
               navigate("/Verify");

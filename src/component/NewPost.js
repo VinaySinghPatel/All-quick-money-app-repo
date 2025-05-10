@@ -56,7 +56,7 @@ const NewPost = (props) => {
               display: "block",
             }}
           >
-            Post Title
+           For How Much Time :
           </label>
           <input
             type="text"
@@ -131,7 +131,7 @@ const NewPost = (props) => {
             onChange={onChange}
             value={Post.description}
             placeholder="Enter Loan Interest Rate (e.g., 5% per month)"
-            rows="3"
+            rows="1"
             style={{
               backgroundColor: "#1f2937",
               color: "#FFFFFF",

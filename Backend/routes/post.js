@@ -26,7 +26,7 @@ router.post('/createpost', fecthUser, [
             description,
             mobilenumber,
             user: req.user.id,
-            user : req.user.name
+            userId: req.user.id,
         });
 
         let savepost = await newpost.save();
@@ -39,9 +39,13 @@ router.post('/createpost', fecthUser, [
 });
 
 
-router.get('/getallpost', fecthUser, async (req, res) => {
+router.get('/getallpost/:id', async (req, res) => {
     try {
-        let posts = await Post.find({ user: req.user._id });
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ error: "User ID is required." });
+        }
+        let posts = await Post.find({ user: id }).populate('userId', 'name email');
         res.json(posts);
     } catch (error) {
         console.error("Error fetching posts:", error.message);
@@ -52,7 +56,7 @@ router.get('/getallpost', fecthUser, async (req, res) => {
 router.get('/getalldbpost', async (req,res)=>{
     try {
         // Post.find() yaha hm bina fetchuser ke sari post dekh sakte hain
-            let posts = await Post.find();
+            let posts = await Post.find().populate('userId', 'name email');
             res.json(posts);
     } catch (error) {
         console.error("Error fetching all user posts:", error.message);
@@ -98,8 +102,7 @@ router.delete('/deletepost/:id', fecthUser, async (req, res) => {
         if (post.user.toString() !== req.user.id) {
             return res.status(403).json({ error: "Unauthorized to delete this post" });
         }
-
-       post = await Post.findByIdAndDelete(req.params.id);
+ post = await Post.findByIdAndDelete(req.params.id);
         res.json({
             tittle: post.tittle,
             money: post.money,

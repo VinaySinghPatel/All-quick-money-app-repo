@@ -7,6 +7,11 @@ const PostSchema = new Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : 'user'
      },
+     userId : {
+     type : mongoose.Schema.Types.ObjectId,
+     ref : 'user', 
+     required : true
+   },
     tittle: {
       type: String,
       required: true

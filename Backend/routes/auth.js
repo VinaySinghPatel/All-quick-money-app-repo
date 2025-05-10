@@ -53,8 +53,9 @@ router.post('/createuser',[
         }
       }
       let AuthToken = jwt.sign(UserId,jwt_token);
+      const userdata = await user.id;
       Succes = true;
-       res.json({Succes,AuthToken});
+       res.json({Succes,AuthToken,userdata});
         
     } catch (error) {
       console.error(error.message);
@@ -96,8 +97,9 @@ router.post('/Login',[
 
     // Yaha per sign kr rahe kyu ham crediatial se login kar rahe hai 
   const Authtoken = await jwt.sign(UserId,jwt_token);
+  const userdata = await user.id;
   Succes = true;
-  res.json({Succes : "Succesfully Login",Authtoken})
+  res.json({Succes : "Succesfully Login",Authtoken,userdata})
 } catch (error) {
   console.error(error.message);
   console.log("There is an error in Email Pass Login ");

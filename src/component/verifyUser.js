@@ -19,7 +19,7 @@ const VerifyUser = (props) => {
    
     e.preventDefault();
     try {
-      let response = await fetch('https://quickmoney-backend.onrender.com/api/otp/send-otp', {
+      let response = await fetch('https://backendofquickmoney.onrender.com/api/otp/send-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ const VerifyUser = (props) => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      let response = await fetch('https://quickmoney-backend.onrender.com/api/otp/verify-otp', {
+      let response = await fetch('https://backendofquickmoney.onrender.com/api/otp/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -55,8 +55,9 @@ const VerifyUser = (props) => {
       let json = await response.json();
       console.log(json);
       if (json.Succes) {
-        localStorage.setItem('token', json.authToken);
-        navigate('/');
+        localStorage.setItem('Authtoken', json.authToken);
+        localStorage.setItem('userId', json.userdata);
+        navigate('/Login');
         props.EditTheAlert("Success", "OTP verified successfully.");
       } else {
         props.EditTheAlert("Error", "Invalid OTP. Please try again.");

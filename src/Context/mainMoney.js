@@ -4,33 +4,34 @@ import MainContext from "./mainContext";
 const MainMoney = (props) => {
      const initialpost = [];
      const [Posts,Setpost] = useState(initialpost);
-    //  let token = "";
+     const [MyPosts,MySetpost] = useState([]);
 
      const GetPost = async () => {
-            let Token = localStorage.getItem('auth-token');
+            let Token = localStorage.getItem('Authtoken');
+            let userId = localStorage.getItem('userId');
             if(!Token){
                 console.log("The Token Are not Found in the Storage");
             }
             try {
-                const response = await fetch('https://quickmoney-backend.onrender.com/api/post/getallpost',{
+                const response = await fetch(`https://backendofquickmoney.onrender.com/api/post/getallpost/${userId}`,{
                     method: 'GET',
                     headers: {
                       'Content-Type': 'application/json',
-                      'auth-token': Token,  
+                      'Authtoken': Token,  
                     },
                 })
                 let Json = await response.json();
-                Setpost(Json);
+                MySetpost(Json);
+                console.log(Json);
             } catch (error) {
-           
-                console.log(error);
+                
             }
      };
 
 
      const GetAllPost = async () => {
         try {
-            const response = await fetch('https://quickmoney-backend.onrender.com/api/post/getalldbpost',{
+            const response = await fetch('https://backendofquickmoney.onrender.com/api/post/getalldbpost',{
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
@@ -39,6 +40,7 @@ const MainMoney = (props) => {
             )
                 let Json = await response.json();
                 Setpost(Json);
+                console.log(Json);
             
         } catch (error) {
             console.log("There is error Occured Herer",error);
@@ -47,16 +49,16 @@ const MainMoney = (props) => {
 
      
      const AddPost = async (tittle,money,description,mobilenumber) => {
-        let Token = localStorage.getItem('auth-token');
+        let Token = localStorage.getItem('Authtoken');
         if(!Token){
             console.log("Token Are Not Exist While AddPost");
         }
         try {
-            let response = await fetch('https://quickmoney-backend.onrender.com/api/post/createpost',{
+            let response = await fetch('https://backendofquickmoney.onrender.com/api/post/createpost',{
                 method : 'POST',
                 headers : {
                     'Content-Type' : 'application/json',
-                    'auth-token' : Token,
+                    'Authtoken' : Token,
                 },
                 body : JSON.stringify({tittle,money,description,mobilenumber})
             })
@@ -70,16 +72,16 @@ const MainMoney = (props) => {
 
 
      const EditPost = async (id,tittle,money,description,mobilenumber) => {
-        let Token = localStorage.getItem('auth-token');
+        let Token = localStorage.getItem('Authtoken');
         if(!Token){
             console.log("Token Are Not Exist While AddPost");
         }
         try {
-            await fetch(`https://quickmoney-backend.onrender.com/api/post/updatepost/${id}`,{
+            await fetch(`https://backendofquickmoney.onrender.com/api/post/updatepost/${id}`,{
                 method : 'PUT',
                 headers : {
                     'Content-Type' : 'application/json',
-                    'auth-token' : Token,
+                    'Authtoken' : Token,
                 },
                 body : JSON.stringify({tittle,money,description,mobilenumber})
             })  
@@ -93,28 +95,28 @@ const MainMoney = (props) => {
                         break;
                         }
                 }
-                Setpost(NewEditPost);
+                MySetpost(NewEditPost);
      }catch{
         console.log("There is an Error there are");
      }
     };
 
 
-        const DeletePost = async (_id) => {
-            let Token = localStorage.getItem('auth-token');
+        const DeletePost = async (id) => {
+            let Token = localStorage.getItem('Authtoken');
             if(!Token){
                 console.log("Token Are Not Exist While AddPost");
             }
             try {
-                await fetch(`https://quickmoney-backend.onrender.com/api/post/deletepost/${_id}`,{
+                await fetch(`https://backendofquickmoney.onrender.com/api/post/deletepost/${id}`,{
                     method : 'DELETE',
                     headers : {
                         'Content-Type' : 'application/json',
-                        'auth-token' : Token,
+                        'Authtoken' : Token,
                     }
                 })
-                const NewPost = Posts.filter((post)=>post._id !== _id);
-                Setpost(NewPost);  
+                const NewPost = Posts.filter((post)=>post._id !== id);
+                MySetpost(NewPost);  
             } catch (error) {
                 console.log("There is an Error occured");
             }
@@ -122,7 +124,7 @@ const MainMoney = (props) => {
 
 
     return(
-        <MainContext.Provider value={{Posts,GetAllPost,DeletePost,EditPost,AddPost,GetPost}}>
+        <MainContext.Provider value={{MyPosts,Posts,GetAllPost,DeletePost,EditPost,AddPost,GetPost}}>
             {props.children}
         </MainContext.Provider>
     )

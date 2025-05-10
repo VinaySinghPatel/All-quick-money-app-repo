@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 const Navbar = () => {
   let history = useNavigate();
   const handlelogout = () => {
-    localStorage.removeItem("auth-token");
+    localStorage.removeItem("Authtoken");
     history("/login");
   };
 
@@ -48,21 +48,21 @@ const Navbar = () => {
               <li className="nav-item">
                 <Link
                   className={`nav-link text-light ${
-                    Location.pathname === "/about" ? "active" : ""
+                    Location.pathname === "/visit" ? "active" : ""
                   }`}
-                  to="/about"
+                  to="/visit"
                 >
                   About
                 </Link>
               </li>
-              {localStorage.getItem("auth-token") && (
+              {localStorage.getItem("Authtoken") && (
                 <li className="nav-item">
                   <Link className={`nav-link text-light`} to="/NewPost">
                     Rent-Money
                   </Link>
                 </li>
               )}
-              {localStorage.getItem("auth-token") && (
+              {localStorage.getItem("Authtoken") && (
                 <li className="nav-item">
                   <Link
                     className={`nav-link text-light ${
@@ -74,7 +74,7 @@ const Navbar = () => {
                   </Link>
                 </li>
               )}
-              {localStorage.getItem("auth-token") && (
+              {localStorage.getItem("Authtoken") && (
                 <li className="nav-item">
                   <Link
                     className={`nav-link text-light ${
@@ -87,7 +87,7 @@ const Navbar = () => {
                 </li>
               )}
             </ul>
-            {!localStorage.getItem("auth-token") ? (
+            {!localStorage.getItem("Authtoken") ? (
               <form className="d-flex" role="search">
                 <Link
                   className="btn btn-primary mx-2 text-white"

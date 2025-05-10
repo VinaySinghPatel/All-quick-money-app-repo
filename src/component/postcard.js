@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { ClipLoader } from 'react-spinners';
+import userEvent from '@testing-library/user-event';
 
 const Postcard = (props) => {
   const { post } = props;
@@ -17,11 +18,10 @@ const Postcard = (props) => {
 
   useEffect(() => {
     AOS.init({ duration: 2000 });
+    
+    setIsLoading(false);
   }, []);
 
-  const handleImageLoad = () => {
-    setIsLoading(false);
-  };
 
   return (
     <div className="col-md-3">
@@ -34,10 +34,13 @@ const Postcard = (props) => {
         </div>
       )}
       <div
-        className={`card my-3 bg-dark text-white ${isLoading ? 'd-none' : ''}`}
+        className={`card my-3  text-dark ${isLoading ? 'd-none' : ''}`}
         style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-          boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
+          color : "black",
+          background: 'darkgrey',
+          boxShadow: '0px 0px 20px black',
+          border : '1rem  black bold',
+          borderStyle: "solid",
           borderRadius: '1.2rem',
           transition: 'transform 0.3s, box-shadow 0.3s',
           overflow: 'hidden',
@@ -49,20 +52,21 @@ const Postcard = (props) => {
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = '0px 6px 15px rgba(0, 0, 0, 0.3)';
+          e.currentTarget.style.boxShadow = '0px 0px 20px black';
         }}
-        data-aos="fade-up"
+        // data-aos="fade-up"
       >
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
+            justifyContent : "center",
             padding: '0.5rem',
-            background: 'linear-gradient(to right, #1e1e2f, #FFD700)',
+            background: 'black',
             borderRadius: '1.2rem 1.2rem 0 0',
           }}
         >
-          <img
+          {/* <img
             src={'VinayPIC (2).jpg'}
             alt={`Vinay's profile`}
             style={{
@@ -72,19 +76,20 @@ const Postcard = (props) => {
               marginRight: '10px',
               objectFit: 'cover',
             }}
-          />
+          /> */}
           <span
             style={{
               color: 'white',
-              fontSize: '0.9rem',
+              fontSize: '1.1rem',
               fontWeight: 'bold',
             }}
           >
-            Vinay Singh Patel
+           {post.userId?.name}
           </span>
         </div>
-        <div style={{ position: 'relative' }}>
-          <img
+        <div style={{ position: 'relative',  height: '50px',
+              width: '100%', }}>
+          {/* <img
             src="DoneWithThis.jpeg"
             style={{
               borderRadius: '0 0 1.2rem 1.2rem',
@@ -95,60 +100,52 @@ const Postcard = (props) => {
             }}
             className="card-img-top"
             alt="Indian Currency"
-            onLoad={handleImageLoad}
-          />
+           
+          /> */}
           <div
             style={{
               position: 'absolute',
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              color: '#FFD700',
+              color: 'rgb(255, 165, 0)',
               fontSize: '2rem',
               fontWeight: 'bold',
-              textShadow: '3px 3px 8px black',
+              textShadow: '3px 3px 15px black',
+              marginTop : "0.7rem"
             }}
+            
           >
             ₹{post.money}
           </div>
         </div>
-
+<hr/>
         <div className="card-body p-3">
-          <p style={{ color: '#FFDDC1', fontSize: '0.9rem' }}>
-            📞 {post.mobilenumber}
+          <p style={{ color: 'black', fontSize: '0.9rem',
+              fontWeight: 'bold' }}>
+           Contact 📞 : {post.mobilenumber}
           </p>
           <h6
             className="card-title"
-            style={{ color: '#FFFFFF', fontSize: '1rem' }}
+            style={{ color: 'black', fontSize: '1rem' }}
           >
-            {post.tittle}
+           For : {post.tittle}
           </h6>
           <p
-            className="card-text"
-            style={{
-              color: '#EAEAEA',
-              fontSize: '0.85rem',
-              marginBottom: '0.5rem',
-            }}
-          >
-            {post.description}
-          </p>
-        
-          <p
             style={{
               fontSize: '0.85rem',
-              color: '#FFD700',
+              color: 'black',
               fontWeight: 'bold',
               marginBottom: '0.5rem',
             }}
           >
-            📊 Loan Interest Rate: <span style={{ color: '#FFFFFF' }}>{post.loanRate}% per month</span>
+            📊 Loan Interest Rate: <span style={{ color: 'black' }}>{post.description}% per month</span>
           </p>
           <p
             className="card-time"
-            style={{ fontSize: '0.75rem', color: '#AAAAAA' }}
+            style={{ fontSize: '0.75rem', color: 'black' }}
           >
-            {readableDate}
+           ( {readableDate} )
           </p>
         </div>
       </div>

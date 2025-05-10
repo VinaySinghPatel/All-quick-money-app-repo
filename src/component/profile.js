@@ -14,10 +14,10 @@ const Profile = () => {
     // }
 
 // It is Currently Hard Coded the userId We will also imporve this
-
+        const userdata = localStorage.getItem('userId')
     try {
     
-      let response = await fetch('http://localhost:5000/api/auth/GetUserData/672bcb47937e10412862a51d', {
+      let response = await fetch(`https://backendofquickmoney.onrender.com/api/auth/GetUserData/${userdata}`, {
         method: 'GET', 
 
         headers: {
@@ -47,16 +47,16 @@ const Profile = () => {
   }
 
   if (!user) {
-    return <p>No user data available.</p>;
-  }
-  const postDate = new Date(user.fromDate);
+    <p>No user data available</p>
+    }
+    
+  const postDate = new Date(user.fromdate);
   const day = postDate.getDate();
   const month = postDate.toLocaleString('default', { month: 'long' });
   const year = postDate.getFullYear();
   const hours = postDate.getHours().toString().padStart(2, '0'); 
   const minutes = postDate.getMinutes().toString().padStart(2, '0');
   const readableDate = `${day} ${month} ${year}, ${hours}:${minutes}`;
-
   return (
     <>
       <section className="">
@@ -73,7 +73,7 @@ const Profile = () => {
                     }}
                   >
                     <img
-                      src="image.jpg"
+                      src="quickmoney.jpg"
                       alt="Avatar"
                       className="img-fluid my-5"
                       style={{ width: "80px", borderRadius: "2rem" }}

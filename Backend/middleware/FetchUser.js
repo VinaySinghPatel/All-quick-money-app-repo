@@ -1,7 +1,7 @@
 let jwt = require('jsonwebtoken');
 let jwt_secret = "VinaySinghPatel";  
 const FetchUser = (req, res, next) => {
-  let token = req.header('auth-token');
+  let token = req.header('Authtoken');
 
   if (!token) {
     return res.status(400).json({ error: "Token is missing or invalid" });

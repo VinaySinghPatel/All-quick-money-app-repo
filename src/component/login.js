@@ -9,7 +9,7 @@ const Login = (props) => {
     console.log('Submit');
     try {
       e.preventDefault();
-      let response = await fetch('http://localhost:5000/api/auth/Login', {
+      let response = await fetch('https://backendofquickmoney.onrender.com/api/auth/Login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,18 +21,15 @@ const Login = (props) => {
       console.log(json);
 
       if (json.Succes) {
-        // Save the Auth-Token and User ID
-        localStorage.setItem('auth-token', json.Authtoken);
-        localStorage.setItem('userId', json._id); // Save the userId 
+        // Save the Authtoken and User ID
+        localStorage.setItem('Authtoken', json.Authtoken);
+        localStorage.setItem('userId', json.userdata); // Save the userId 
         console.log(json._id);
         
-        // Redirect user to the home page
         navigate('/');
 
-        // Show success message
         props.EditTheAlert('Success', 'Successfully You Are Logged In');
       } else {
-        // Show error message
         props.EditTheAlert('Error', 'There is an Error');
       }
     } catch (error) {

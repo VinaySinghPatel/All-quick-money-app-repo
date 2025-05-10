@@ -13,10 +13,11 @@ const Mainpage = (props) => {
   return (
     <div
       style={{
-        background: 'linear-gradient(to bottom, #1e1e2f, #121214)',
+        background: 'white',
         minHeight: '100vh',
         padding: '2rem 1rem',
-        borderRadius: '15px'
+        borderRadius: '15px',
+        boxShadow : "0px 0px 10px"
       }}
     >
       <div className="container">
@@ -26,7 +27,7 @@ const Mainpage = (props) => {
             fontSize: '3rem',
             fontWeight: 'bold',
             textAlign: 'center',
-            textShadow: '2px 2px 10px rgba(0, 0, 0, 0.5)',
+            textShadow: '0px 0px 20px black',
             marginBottom: '1.5rem',
           }}
         >
@@ -41,7 +42,7 @@ const Mainpage = (props) => {
               marginBottom: '1rem',
             }}
           >
-            {Array.isArray(Posts) && Posts.length === 0 && 'No Records Here'}
+            {Array.isArray(Posts) && Posts.length === 0 && 'Please Wait Some Seconds, Loading......'}
           </div>
           {/* Map over Posts */}
           {Array.isArray(Posts) &&
@@ -49,7 +50,7 @@ const Mainpage = (props) => {
               .sort((a, b) => new Date(b.fromDate) - new Date(a.fromDate))
               .map((record) => (
                 <Postcard
-                  key={record.id}
+                  key={record._id}
                   EditTheAlert={props.EditTheAlert}
                   post={record}
                 />
