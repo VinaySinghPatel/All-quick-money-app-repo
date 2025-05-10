@@ -14,8 +14,9 @@ router.post('/createuser',[
   body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
   body('name').notEmpty().withMessage('Name must be at least 2 characters long'),
   body('username').notEmpty().withMessage('Username must be at least 3 characters long'),
-  body('mobilenumber').isLength({ min: 10 }).withMessage('Mobile Number must be 10 character')
-  
+  body('mobilenumber').isLength({ min: 10 }).withMessage('Mobile Number must be 10 character'),
+  body('aadharNumber').isLength({ min: 12 }).withMessage('Please Enter a Valid Aadhar number'),
+  body('panCardNumber').isLength({ min: 10 }).withMessage('Please Enter a Valid Pan Card Number'),
 ], async (req,res) => {
     let Succes = false;
     // Yaha per ham validationResult ki mdad se erro pata laga rahe hai req kar ke
@@ -41,7 +42,9 @@ router.post('/createuser',[
         username : req.body.username,
         password : SaltPass,
         email : req.body.email,
-        mobilenumber : req.body.mobilenumber
+        mobilenumber : req.body.mobilenumber,
+        aadharNumber : req.body.aadharNumber,
+        panCardNumber : req.body.panCardNumber
       })
 
 

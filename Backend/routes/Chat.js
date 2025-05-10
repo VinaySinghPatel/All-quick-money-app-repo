@@ -1,3 +1,4 @@
+// routes/chatRoutes.js
 const express = require('express');
 const router = express.Router();
 const Chat = require('../models/chat');
@@ -5,7 +6,6 @@ const Chat = require('../models/chat');
 router.post('/send', async (req, res) => {
   try {
     const { senderId, receiverId, message } = req.body;
-
     const roomId = [senderId, receiverId].sort().join('_');
 
     const newMessage = new Chat({

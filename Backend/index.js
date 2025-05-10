@@ -47,30 +47,30 @@ const io = new Server(server, {
   }
 });
 
+// Creating connnection
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
   socket.on('joinRoom', ({ senderId, receiverId }) => {
     const roomId = [senderId, receiverId].sort().join('_');
     socket.join(roomId);
-    console.log(`User joined room ${roomId}`);
+    console.log(`User ${senderId} joined room ${roomId}`);
   });
 
-  socket.on('sendMessage', async ({ senderId,  RecieverId, message }) => {
-    const roomId = [senderId, RecieverId].sort().join('_');
+  socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
+    const roomId = [senderId, receiverId].sort().join('_');
 
-    // 1. Send message in real-time
     io.to(roomId).emit('receiveMessage', { senderId, message });
 
-    // 2. Save to DB
-    const newMessage = new Chat({ senderId,  RecieverId, message, roomId });
+    const newMessage = new Chat({ senderId, receiverId, message, roomId });
     await newMessage.save();
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconnected');
+    // console.log('User disconnected:', socket.id);
   });
 });
+
 
 
 // app.use(cors());
