@@ -7,32 +7,30 @@ const mongoose = require('mongoose');
 const { Server } = require('socket.io');
 const Chat = require('./models/chat');
 const chatRoutes = require('./routes/Chat');
+const agreementsRouter = require('./routes/Agreements');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://67564946d8f04f4373e76ea3--deft-semifreddo-592c5a.netlify.app' 
- 
+  'https://67564946d8f04f4373e76ea3--deft-semifreddo-592c5a.netlify.app',
+  'https://famous-marigold-70f8e4.netlify.app'
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
+    console.log('CORS origin check:', origin); 
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true 
+  credentials: true
 }));
 
-
-////////////////////////////////////////////////////////////////////////////////////
-//Socket-Io Work
-const server = http.createServer(app); // Create HTTP server
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: (origin, callback) => {
@@ -47,23 +45,31 @@ const io = new Server(server, {
   }
 });
 
-// Creating connnection
+// Socket.IO logic
 io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
+  // console.log('User connected:', socket.id);
 
-  socket.on('joinRoom', ({ senderId, receiverId }) => {
-    const roomId = [senderId, receiverId].sort().join('_');
+ 
+  socket.on('joinRoom', (roomId) => {
     socket.join(roomId);
-    console.log(`User ${senderId} joined room ${roomId}`);
+    // console.log(`User joined room: ${roomId}`);
   });
 
-  socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
-    const roomId = [senderId, receiverId].sort().join('_');
+  socket.on('sendMessage', async ({ senderId, receiverId, message, timestamp }) => {
+    const roomId = [senderId, receiverId].sort().join('-'); // match frontend format
+    const newMessage = new Chat({ senderId, receiverId, message, roomId, timestamp });
 
-    io.to(roomId).emit('receiveMessage', { senderId, message });
-
-    const newMessage = new Chat({ senderId, receiverId, message, roomId });
     await newMessage.save();
+    io.to(roomId).emit('receiveMessage', {
+      senderId,
+      receiverId,
+      message,
+      timestamp
+    });
+  });
+
+  socket.on('typing', ({ room, isTyping }) => {
+    socket.to(room).emit('typing', { room, isTyping });
   });
 
   socket.on('disconnect', () => {
@@ -71,12 +77,8 @@ io.on('connection', (socket) => {
   });
 });
 
-
-
-// app.use(cors());
-
+// Middleware
 app.use(express.json());
-
 connectTomongo().then(() => {
   console.log('Connected to MongoDB');
 }).catch((error) => {
@@ -84,11 +86,14 @@ connectTomongo().then(() => {
   process.exit(1);
 });
 
+// Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/post', require('./routes/post'));
 app.use('/api/otp', require('./routes/otp'));
-app.use('/api/Chat',chatRoutes);
+app.use('/api/Chat', chatRoutes);
+app.use('/api/agreements', agreementsRouter);
 
+// Start server
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

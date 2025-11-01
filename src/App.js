@@ -10,64 +10,65 @@ import Alert from "./component/alert";
 import Profile from "./component/profile";
 import MyPost from "./component/Mypost";
 import VerifyUser from "./component/verifyUser";
-import Visit from "./component/visit";
 import Chat from "./component/Chatting";
+import AllPosts from "./component/AllPosts";
 import { socket } from './socket';
 
 function App() {
-
   useEffect(() => {
-    
+    // Connect to the server
     socket.connect();
 
     socket.on('connect', () => {
       console.log('Connected to server');
     });
 
+    // Event listener for receiving messages
     socket.on('receiveMessage', (data) => {
       console.log('New message:', data);
     });
 
     // Cleanup on unmount
     return () => {
-      socket.off('receiveMessage');
-      socket.disconnect();
+      socket.off('receiveMessage'); // Remove listener for the event
+      socket.disconnect(); // Disconnect when the component unmounts
     };
   }, []);
 
+  const [alert, Setalert] = useState(null);
 
-  const[alert,Setalert] = useState(null);
-  const EditTheAlert = (status,msg) => {
+  const EditTheAlert = (status, msg) => {
     Setalert({
-      status : status,
-      msg : msg
-    })
-    setTimeout(()=>{
+      status: status,
+      msg: msg,
+    });
+    setTimeout(() => {
       Setalert(null);
-    },1800);
-  }
+    }, 1800);
+  };
+
   return (
-   <>
-    <MainMoney >
-      <Router>
-      <Navbar/>
-      <Alert   ale={alert}/>
-      <div className="container">
-        <Routes>
-            <Route exact path="/" element={<Mainpage  EditTheAlert={EditTheAlert}/> }/>
-            <Route  exact path="/login" element={<Login  EditTheAlert={EditTheAlert}/> }/>
-            <Route  exact path="/chat" element={<Chat   EditTheAlert={EditTheAlert}/> }/>
-            <Route  exact path="/SignUp" element={<SignUp  EditTheAlert={EditTheAlert}/> }/>
-            <Route  exact path="/NewPost" element={<Newpost  EditTheAlert={EditTheAlert}/> }/>
-            <Route  exact path="/Profile" element={<Profile  EditTheAlert={EditTheAlert}/> }/>
-            <Route  exact path="/MyPost" element={<MyPost  EditTheAlert={EditTheAlert}/> }/>
-            <Route exact path="/Verify" element={<VerifyUser EditTheAlert={EditTheAlert}/>}/>
-           {/* <Route exact path="/visit" element={<Visit EditTheAlert={EditTheAlert}/>}/> */}
-        </Routes>
-        </div>
-      </Router>
+    <>
+      <MainMoney>
+        <Router>
+          <Navbar />
+          <Alert ale={alert} />
+          <div className="container">
+            <Routes>
+              <Route exact path="/" element={<Mainpage EditTheAlert={EditTheAlert} />} />
+              <Route exact path="/allposts" element={<AllPosts EditTheAlert={EditTheAlert} />} />
+              <Route exact path="/login" element={<Login EditTheAlert={EditTheAlert} />} />
+              <Route exact path="/chat" element={<Chat EditTheAlert={EditTheAlert} />} />
+              <Route exact path="/SignUp" element={<SignUp EditTheAlert={EditTheAlert} />} />
+              <Route exact path="/NewPost" element={<Newpost EditTheAlert={EditTheAlert} />} />
+              <Route exact path="/Profile" element={<Profile EditTheAlert={EditTheAlert} />} />
+              <Route exact path="/MyPost" element={<MyPost EditTheAlert={EditTheAlert} />} />
+              <Route exact path="/Verify" element={<VerifyUser EditTheAlert={EditTheAlert} />} />
+            </Routes>
+          </div>
+        </Router>
       </MainMoney>
-   </>
+    </>
   );
 }
 

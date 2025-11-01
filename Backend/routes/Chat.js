@@ -26,7 +26,7 @@ router.post('/send', async (req, res) => {
 router.get('/history/:user1/:user2', async (req, res) => {
   try {
     const { user1, user2 } = req.params;
-    const roomId = [user1, user2].sort().join('_');
+    const roomId = [user1, user2].sort().join('-');
 
     const messages = await Chat.find({ roomId }).sort({ timestamp: 1 });
 
