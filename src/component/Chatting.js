@@ -3,8 +3,9 @@ import socket from "../socket";
 import axios from "axios";
 import EmojiPicker from "emoji-picker-react";
 import { FaTimes, FaPaperPlane, FaSmile } from "react-icons/fa";
+import API_BASE_URL from '../config/api';
 
-const Chat = ({ senderId, receiverId, onClose }) => {
+const Chat = ({ senderId, receiverId, receiverName, onClose }) => {
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -25,7 +26,7 @@ const Chat = ({ senderId, receiverId, onClose }) => {
     const fetchHistory = async () => {
       try {
         const res = await axios.get(
-          `https://backendofquickmoney.onrender.com/api/Chat/history/${senderId}/${receiverId}`
+          `${API_BASE_URL}/api/Chat/history/${senderId}/${receiverId}`
         );
         if (res.data.success) setChatLog(res.data.data);
       } catch (error) {
@@ -75,7 +76,7 @@ const Chat = ({ senderId, receiverId, onClose }) => {
     };
 
     try {
-      await axios.post("https://backendofquickmoney.onrender.com/api/Chat/send", newMessage);
+      await axios.post(`${API_BASE_URL}/api/Chat/send`, newMessage);
       socket.emit("sendMessage", newMessage);
       setMessage("");
       setShowEmojiPicker(false);
@@ -112,11 +113,12 @@ const Chat = ({ senderId, receiverId, onClose }) => {
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
+      border: '2px solid #000',
     }}>
       <div className="card-header d-flex justify-content-between align-items-center p-3"
-        style={{ backgroundColor: '#2c3e50', color: 'white' }}>
-        <h5 className="mb-0">Chat with Partner</h5>
-        <button onClick={onClose} className="btn btn-link text-white p-0">
+        style={{ backgroundColor: '#2c3e50', color: '#000' }}>
+        <h5 className="mb-0 text-white">Chat with {receiverName || 'Partner'}</h5>
+        <button onClick={onClose} className="btn btn-link text-dark p-0">
           <FaTimes size={20} />
         </button>
       </div>

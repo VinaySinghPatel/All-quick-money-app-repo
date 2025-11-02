@@ -25,34 +25,48 @@ const NewPost = (props) => {
 
   return (
     <div
-      className="container my-5 p-5 rounded"
+      className="container-fluid d-flex align-items-center justify-content-center"
       style={{
-        background: "linear-gradient(to bottom, #111827, #1f2937)",
-        boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.3)",
-        color: "#ffffff",
+        background: 'transparent',
+        minHeight: '100vh',
+        width: '100%',
+        padding: '60px 20px',
+        margin: '0'
       }}
     >
-      <h2
-        className="mb-4 text-center"
+      <div
+        className="card text-white p-4"
         style={{
-          color: "#FFD700",
-          fontWeight: "bold",
-          letterSpacing: "1.5px",
-          textShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
+          width: '100%',
+          maxWidth: '700px',
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(15px)',
+          borderRadius: '20px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+          border: '2px solid #000'
         }}
       >
-        Create a New Post
-      </h2>
+        <div 
+          className="card-header text-center py-4 mb-4"
+          style={{ 
+            background: 'linear-gradient(135deg, #8456ce, #4066df)',
+            color: '#1e1e2f',
+            borderRadius: '20px',
+            border: 'none'
+          }}
+        >
+          <h2 className="mb-0 fw-bold">Create a New Post</h2>
+        </div>
       <form className="row g-4 needs-validation" noValidate>
      
         <div className="col-12">
           <label
             htmlFor="tittle"
             style={{
-              color: "#FFD700",
-              fontWeight: "bold",
-              fontSize: "0.9rem",
-              marginBottom: "5px",
+              color: "#000",
+              fontWeight: "600",
+              fontSize: "1rem",
+              marginBottom: "8px",
               display: "block",
             }}
           >
@@ -67,10 +81,10 @@ const NewPost = (props) => {
             value={Post.tittle}
             placeholder="Enter Title"
             style={{
-              backgroundColor: "#1f2937",
-              color: "#FFFFFF",
-              border: "2px solid #FFD700",
-              borderRadius: "8px",
+              background: 'rgba(255, 255, 255, 0.1)',
+              color: "#000000",
+              border: "1px solid #000",
+              borderRadius: "10px",
               padding: "12px",
               fontSize: "1rem",
             }}
@@ -82,10 +96,10 @@ const NewPost = (props) => {
           <label
             htmlFor="money"
             style={{
-              color: "#FFD700",
-              fontWeight: "bold",
-              fontSize: "0.9rem",
-              marginBottom: "5px",
+              color: "#000",
+              fontWeight: "600",
+              fontSize: "1rem",
+              marginBottom: "8px",
               display: "block",
             }}
           >
@@ -100,10 +114,10 @@ const NewPost = (props) => {
             value={Post.money}
             placeholder="Enter Loan Amount (₹)"
             style={{
-              backgroundColor: "#1f2937",
-              color: "#FFFFFF",
-              border: "2px solid #FFD700",
-              borderRadius: "8px",
+              background: 'rgba(255, 255, 255, 0.1)',
+              color: "#000000",
+              border: "1px solid #000",
+              borderRadius: "10px",
               padding: "12px",
               fontSize: "1rem",
             }}
@@ -115,10 +129,10 @@ const NewPost = (props) => {
           <label
             htmlFor="description"
             style={{
-              color: "#FFD700",
-              fontWeight: "bold",
-              fontSize: "0.9rem",
-              marginBottom: "5px",
+              color: "#000",
+              fontWeight: "600",
+              fontSize: "1rem",
+              marginBottom: "8px",
               display: "block",
             }}
           >
@@ -133,10 +147,10 @@ const NewPost = (props) => {
             placeholder="Enter Loan Interest Rate (e.g., 5% per month)"
             rows="1"
             style={{
-              backgroundColor: "#1f2937",
-              color: "#FFFFFF",
-              border: "2px solid #FFD700",
-              borderRadius: "8px",
+              background: 'rgba(255, 255, 255, 0.1)',
+              color: "#000000",
+              border: "1px solid #000",
+              borderRadius: "10px",
               padding: "12px",
               fontSize: "1rem",
             }}
@@ -148,10 +162,10 @@ const NewPost = (props) => {
           <label
             htmlFor="mobilenumber"
             style={{
-              color: "#FFD700",
-              fontWeight: "bold",
-              fontSize: "0.9rem",
-              marginBottom: "5px",
+              color: "#000",
+              fontWeight: "600",
+              fontSize: "1rem",
+              marginBottom: "8px",
               display: "block",
             }}
           >
@@ -166,10 +180,10 @@ const NewPost = (props) => {
             value={Post.mobilenumber}
             placeholder="Enter Mobile Number"
             style={{
-              backgroundColor: "#1f2937",
-              color: "#FFFFFF",
-              border: "2px solid #FFD700",
-              borderRadius: "8px",
+              background: 'rgba(255, 255, 255, 0.1)',
+              color: "#000000",
+              border: "1px solid #000",
+              borderRadius: "10px",
               padding: "12px",
               fontSize: "1rem",
             }}
@@ -182,31 +196,30 @@ const NewPost = (props) => {
             className="btn btn-warning w-100"
             onClick={handleclick}
             style={{
-              backgroundColor: "#FFD700",
-              color: "#1f2937",
-              fontWeight: "bold",
-              fontSize: "1rem",
+              background: "linear-gradient(135deg, #8456ce, #4066df)",
+              color: "#1e1e2f",
+              fontWeight: "600",
+              fontSize: "1.1rem",
               padding: "12px",
-              borderRadius: "8px",
+              borderRadius: "10px",
               border: "none",
-              boxShadow: "0px 4px 10px rgba(255, 215, 0, 0.3)",
-              transition: "transform 0.2s, box-shadow 0.2s",
+              boxShadow: "0 4px 15px rgba(132, 86, 206, 0.3)",
+              transition: "all 0.3s ease",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.05)";
-              e.currentTarget.style.boxShadow =
-                "0px 6px 15px rgba(255, 215, 0, 0.5)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 6px 20px rgba(132, 86, 206, 0.5)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow =
-                "0px 4px 10px rgba(255, 215, 0, 0.3)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 4px 15px rgba(132, 86, 206, 0.3)";
             }}
           >
             Publish Post
           </button>
         </div>
       </form>
+      </div>
     </div>
   );
 };

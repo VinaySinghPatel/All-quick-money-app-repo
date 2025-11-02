@@ -27,11 +27,27 @@ const UserSchema = new Schema ({
       required:false
    },
    aadharNumber:{
-      type:Number,
+      type:String,
       required:false
    },
    panCardNumber:{
-      type:Number,
+      type:String,
+      required:false
+   },
+   city:{
+      type:String,
+      required:false
+   },
+   state:{
+      type:String,
+      required:false
+   },
+   country:{
+      type:String,
+      required:false
+   },
+   pinCode:{
+      type:String,
       required:false
    },
    verified : {

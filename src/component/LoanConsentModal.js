@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ClipLoader } from 'react-spinners';
 import ConfirmationModal from './ConfirmationModal';
+import API_BASE_URL from '../config/api';
 
 const LoanConsentModal = ({ post, borrowerId, lenderId, onClose, EditTheAlert }) => {
   const [name, setName] = useState('');
@@ -65,7 +66,7 @@ const LoanConsentModal = ({ post, borrowerId, lenderId, onClose, EditTheAlert })
 
     setLoading(true);
     try {
-      const response = await fetch('https://backendofquickmoney.onrender.com/api/agreements/confirm', {
+      const response = await fetch(`${API_BASE_URL}/api/agreements/confirm`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +84,7 @@ const LoanConsentModal = ({ post, borrowerId, lenderId, onClose, EditTheAlert })
       });
       const data = await response.json();
 
-      EditTheAlert('Succes','Agreement Created Succesfully');
+      EditTheAlert('Success','Agreement Created Successfully');
       console.log("Clicked");
 
       // if (data.success) {
@@ -118,7 +119,7 @@ const LoanConsentModal = ({ post, borrowerId, lenderId, onClose, EditTheAlert })
             className="modal-content"
             style={{
               background: 'linear-gradient(135deg, #1e1e2f, #2a2a3d)',
-              border: 'none',
+              border: '2px solid #000',
               borderRadius: '15px',
               boxShadow: '0 8px 20px rgba(0,0,0,0.5)',
             }}
@@ -126,7 +127,7 @@ const LoanConsentModal = ({ post, borrowerId, lenderId, onClose, EditTheAlert })
             <div
               className="modal-header"
               style={{
-                background: 'linear-gradient(90deg, #FFD700, #FFC107)',
+                background: 'linear-gradient(90deg, #8456ce, #4066df)',
                 color: '#1e1e2f',
                 borderRadius: '15px 15px 0 0',
               }}
@@ -139,7 +140,7 @@ const LoanConsentModal = ({ post, borrowerId, lenderId, onClose, EditTheAlert })
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body p-4" style={{ background: '#2a2a3d', color: '#fff' }}>
+            <div className="modal-body p-4" style={{ background: '#2a2a3d', color: '#000' }}>
               <h6>Loan Details</h6>
               <p>Amount: ₹{post.money.toLocaleString()}</p>
               <p>Interest Rate: {post.description}% per month</p>
@@ -157,8 +158,8 @@ const LoanConsentModal = ({ post, borrowerId, lenderId, onClose, EditTheAlert })
                   placeholder="Enter your full name"
                   style={{
                     background: '#1e1e2f',
-                    color: '#fff',
-                    border: '1px solid #FFD700',
+                    color: '#000',
+                    border: '1px solid #4066df',
                     borderRadius: '10px',
                   }}
                 />

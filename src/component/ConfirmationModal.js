@@ -20,7 +20,7 @@ const ConfirmationModal = ({ onClose }) => {
           className="modal-content"
           style={{
             background: 'linear-gradient(135deg, #1e1e2f, #2a2a3d)',
-            border: 'none',
+            border: '2px solid #000',
             borderRadius: '15px',
             boxShadow: '0 8px 20px rgba(0,0,0,0.5)',
           }}
@@ -28,7 +28,7 @@ const ConfirmationModal = ({ onClose }) => {
           <div
             className="modal-header"
             style={{
-              background: 'linear-gradient(90deg, #FFD700, #FFC107)',
+              background: 'linear-gradient(90deg, #8456ce, #4066df)',
               color: '#1e1e2f',
               borderRadius: '15px 15px 0 0',
             }}
@@ -41,7 +41,7 @@ const ConfirmationModal = ({ onClose }) => {
               aria-label="Close"
             ></button>
           </div>
-          <div className="modal-body p-4" style={{ background: '#2a2a3d', color: '#fff' }}>
+          <div className="modal-body p-4" style={{ background: '#2a2a3d', color: '#000' }}>
             <p className="text-center">
               Your loan agreement has been successfully signed and approved. Notifications have been sent to both parties.
             </p>

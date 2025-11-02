@@ -1,9 +1,8 @@
 // src/socket.js
 import { io } from 'socket.io-client';
+import API_BASE_URL from './config/api';
 
-const URL = 'https://backendofquickmoney.onrender.com';
-
-export const socket = io(URL, {
+export const socket = io(API_BASE_URL, {
   autoConnect: false, // Prevents automatic connection on initialization
 });
 

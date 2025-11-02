@@ -110,16 +110,23 @@ const Mypost = (props) => {
                 </div>
             </div>
 
-            <div style={{ background: 'linear-gradient(to bottom, #1e1e2f, #121214)', minHeight: '100vh', padding: '2rem 1rem',  borderRadius: '15px', }}>
-                                    <div className="container">
-                                        <h1 style={{
-                                            color: '#FFD700',
-                                            fontSize: '3rem',
-                                            fontWeight: 'bold',
-                                            textAlign: 'center',
-                                            textShadow: '2px 2px 10px rgba(0, 0, 0, 0.5)',
-                                            marginBottom: '1.5rem',
-                                        }}>YOUR POSTS</h1>
+            <div style={{ 
+              background: 'transparent',
+              minHeight: '100vh', 
+              width: '100%',
+              padding: '2rem 1rem',
+              margin: '0'
+            }}>
+              <div className="container-fluid px-4 px-md-5">
+                <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+                  <h1 style={{
+                    color: '#000',
+                    fontSize: 'clamp(2rem, 5vw, 3rem)',
+                    fontWeight: '700',
+                    textAlign: 'center',
+                    textShadow: '0 2px 15px rgba(0,0,0,0.2)',
+                    marginBottom: '2rem',
+                  }}>YOUR POSTS</h1>
                                         <div className="row my-4">
                                             <div className="container text-muted">
                                                 <div className="row">
@@ -136,26 +143,32 @@ const Mypost = (props) => {
                             return (
                                 
                                         <div className="col-md-4" key={post._id} >
-                                            <div className="card my-3 bg-dark text-white" style={{
-                                                boxShadow: "0px 8px 18px rgba(0, 0, 0, 0.25)",
-                                                borderRadius: "12px",
-                                                transition: "transform 0.3s, box-shadow 0.3s",
+                                            <div className="card my-3 text-white" style={{
+                                                background: 'rgba(255, 255, 255, 0.1)',
+                                                backdropFilter: 'blur(15px)',
+                                                border: '2px solid #000',
+                                                borderRadius: "20px",
+                                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+                                                transition: "all 0.3s ease",
                                                 overflow: "hidden",
                                             }} 
                                             onMouseEnter={(e) => {
-                                                e.currentTarget.style.transform = "scale(1.05)";
-                                                e.currentTarget.style.boxShadow = "0px 12px 30px rgba(0, 0, 0, 0.4)";
+                                                e.currentTarget.style.transform = "translateY(-10px)";
+                                                e.currentTarget.style.boxShadow = "0 15px 40px rgba(0, 0, 0, 0.3)";
+                                                e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)";
                                             }}
                                             onMouseLeave={(e) => {
-                                                e.currentTarget.style.transform = "scale(1)";
-                                                e.currentTarget.style.boxShadow = "0px 8px 18px rgba(0, 0, 0, 0.25)";
+                                                e.currentTarget.style.transform = "translateY(0)";
+                                                e.currentTarget.style.boxShadow = "0 8px 32px rgba(0, 0, 0, 0.2)";
+                                                e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
                                             }}>
                                                 <div style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    padding: '0.2rem',
-                                                    background: 'black',
-                                                    borderRadius: '1.2rem 1.2rem 0 0',
+                                                    padding: '1rem',
+                                                    background: 'linear-gradient(135deg, #8456ce, #4066df)',
+                                                    borderRadius: '20px 20px 0 0',
+                                                    color: '#1e1e2f'
                                                 }}>
                                                     <img
                                                         src={'quickmoney.jpg'}
@@ -169,8 +182,8 @@ const Mypost = (props) => {
                                                         }}
                                                     />
                                                     <span style={{
-                                                        color: 'white',
-                                                        fontSize: '0.9rem',
+                                                        color: '#1e1e2f',
+                                                        fontSize: '1rem',
                                                         fontWeight: 'bold',
                                                     }}> {post.userId.name} </span>
                                                 </div>
@@ -195,7 +208,7 @@ const Mypost = (props) => {
                                                         top: '50%',
                                                         left: '50%',
                                                         transform: 'translate(-50%, -50%)',
-                                                        color: '#FFD700',
+                                                        color: '#4066df',
                                                         fontSize: '2rem',
                                                         fontWeight: 'bold',
                                                         textShadow: '3px 3px 8px black',
@@ -205,17 +218,17 @@ const Mypost = (props) => {
                                                 </div>
                                                 <hr/>
                                                 <div className="card-body p-3">
-                                                    <h6 className="card-title" style={{ color: "#FFFFFF", fontSize: "1rem" }}>
+                                                    <h6 className="card-title" style={{ color: "#000000", fontSize: "1rem" }}>
                                                      Mobile-Number :   {post.mobilenumber}
                                                     </h6>
-                                                    <p style={{ fontSize: "0.85rem", color: "#FFD700", fontWeight: "bold", marginBottom: "0.5rem" }}>
-                                                        📊 Loan Interest Rate: <span style={{ color: "#FFFFFF" }}>{post.description}% per month</span>
+                                                    <p style={{ fontSize: "0.85rem", color: "#4066df", fontWeight: "bold", marginBottom: "0.5rem" }}>
+                                                        📊 Loan Interest Rate: <span style={{ color: "#000000" }}>{post.description}% per month</span>
                                                     </p>
                                                     <p className="card-time" style={{ fontSize: "0.75rem", color: "#AAAAAA" }}>
                                                         {readableDate}
                                                     </p>
                                                 </div>
-                                                <div className="card-footer bg-dark border-0 d-flex justify-content-between align-items-center">
+                                                <div className="card-footer border-0 d-flex justify-content-between align-items-center" style={{ background: 'rgba(0, 0, 0, 0.1)' }}>
                                                     <button className="btn btn-warning" onClick={() => UpdateRecord(post)}>Edit</button>
                                                     <button className="btn btn-danger" onClick={() => handleDeletePost(post._id)}>Delete</button>
                                                 </div>
@@ -228,6 +241,7 @@ const Mypost = (props) => {
                           </div>
                     </div>
                 </div>
+              </div>
             </div>
         </div>
     );

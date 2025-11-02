@@ -1,5 +1,6 @@
 import  { useState } from "react";
 import MainContext from "./mainContext";
+import API_BASE_URL from '../config/api';
 
 const MainMoney = (props) => {
      const initialpost = [];
@@ -13,7 +14,7 @@ const MainMoney = (props) => {
                 console.log("The Token Are not Found in the Storage");
             }
             try {
-                const response = await fetch(`https://backendofquickmoney.onrender.com/api/post/getallpost/${userId}`,{
+                const response = await fetch(`${API_BASE_URL}/api/post/getallpost/${userId}`,{
                     method: 'GET',
                     headers: {
                       'Content-Type': 'application/json',
@@ -29,9 +30,21 @@ const MainMoney = (props) => {
      };
 
 
-     const GetAllPost = async () => {
+     const GetAllPost = async (filters = {}, page = 1, limit = 10) => {
         try {
-            const response = await fetch('https://backendofquickmoney.onrender.com/api/post/getalldbpost',{
+            // Build query string from filters
+            const queryParams = new URLSearchParams({
+                page: page.toString(),
+                limit: limit.toString(),
+            });
+
+            if (filters.city) queryParams.append('city', filters.city);
+            if (filters.state) queryParams.append('state', filters.state);
+            if (filters.pinCode) queryParams.append('pinCode', filters.pinCode);
+            if (filters.startDate) queryParams.append('startDate', filters.startDate);
+            if (filters.endDate) queryParams.append('endDate', filters.endDate);
+
+            const response = await fetch(`${API_BASE_URL}/api/post/getalldbpost?${queryParams.toString()}`,{
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
@@ -39,11 +52,27 @@ const MainMoney = (props) => {
             }
             )
                 let Json = await response.json();
-                Setpost(Json);
-                console.log(Json);
+                
+                // Handle both old and new response formats for backward compatibility
+                if (Json.posts) {
+                    Setpost(Json.posts);
+                    return Json; // Return pagination info
+                } else {
+                    // Old format - array of posts
+                    Setpost(Json);
+                    return {
+                        posts: Json,
+                        totalPosts: Json.length,
+                        currentPage: 1,
+                        totalPages: 1,
+                        hasNextPage: false,
+                        hasPrevPage: false
+                    };
+                }
             
         } catch (error) {
             console.log("There is error Occured Herer",error);
+            return null;
         }
      }
 
@@ -54,7 +83,7 @@ const MainMoney = (props) => {
             console.log("Token Are Not Exist While AddPost");
         }
         try {
-            let response = await fetch('https://backendofquickmoney.onrender.com/api/post/createpost',{
+            let response = await fetch(`${API_BASE_URL}/api/post/createpost`,{
                 method : 'POST',
                 headers : {
                     'Content-Type' : 'application/json',
@@ -77,7 +106,7 @@ const MainMoney = (props) => {
             console.log("Token Are Not Exist While AddPost");
         }
         try {
-            await fetch(`https://backendofquickmoney.onrender.com/api/post/updatepost/${id}`,{
+            await fetch(`${API_BASE_URL}/api/post/updatepost/${id}`,{
                 method : 'PUT',
                 headers : {
                     'Content-Type' : 'application/json',
@@ -108,7 +137,7 @@ const MainMoney = (props) => {
                 console.log("Token Are Not Exist While AddPost");
             }
             try {
-                await fetch(`https://backendofquickmoney.onrender.com/api/post/deletepost/${id}`,{
+                await fetch(`${API_BASE_URL}/api/post/deletepost/${id}`,{
                     method : 'DELETE',
                     headers : {
                         'Content-Type' : 'application/json',
@@ -122,9 +151,99 @@ const MainMoney = (props) => {
             }
         }
 
+        const GetConversations = async () => {
+            let userId = localStorage.getItem('userId');
+            if(!userId){
+                console.log("User ID not found in storage");
+                return { success: false, error: 'User ID not found' };
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/Chat/conversations/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const json = await response.json();
+                return json;
+            } catch (error) {
+                console.log("Error fetching conversations:", error);
+                return { success: false, error: 'Failed to fetch conversations' };
+            }
+        }
+
+        // Send notification (loan request)
+        const sendNotification = async (receiverId, message) => {
+            let Token = localStorage.getItem('Authtoken');
+            if(!Token){
+                console.log("Token not found in storage");
+                return { success: false, error: 'Authentication token not found' };
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/notification/send-notification`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authtoken': Token,
+                    },
+                    body: JSON.stringify({ receiverId, message: message || 'Loan request' })
+                });
+                const json = await response.json();
+                return json;
+            } catch (error) {
+                console.log("Error sending notification:", error);
+                return { success: false, error: 'Failed to send notification' };
+            }
+        }
+
+        // Respond to notification (accept/reject)
+        const respondToNotification = async (notificationId, response) => {
+            let Token = localStorage.getItem('Authtoken');
+            if(!Token){
+                console.log("Token not found in storage");
+                return { success: false, error: 'Authentication token not found' };
+            }
+            try {
+                const apiResponse = await fetch(`${API_BASE_URL}/api/notification/respond`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authtoken': Token,
+                    },
+                    body: JSON.stringify({ notificationId, response })
+                });
+                const json = await apiResponse.json();
+                return json;
+            } catch (error) {
+                console.log("Error responding to notification:", error);
+                return { success: false, error: 'Failed to respond to notification' };
+            }
+        }
+
+        // Get all notifications
+        const getAllNotifications = async () => {
+            let userId = localStorage.getItem('userId');
+            if(!userId){
+                console.log("User ID not found in storage");
+                return { success: false, error: 'User ID not found', data: [] };
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/notification/all-notifications/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const json = await response.json();
+                return json;
+            } catch (error) {
+                console.log("Error fetching notifications:", error);
+                return { success: false, error: 'Failed to fetch notifications', data: [] };
+            }
+        }
 
     return(
-        <MainContext.Provider value={{MyPosts,Posts,GetAllPost,DeletePost,EditPost,AddPost,GetPost}}>
+        <MainContext.Provider value={{MyPosts,Posts,GetAllPost,DeletePost,EditPost,AddPost,GetPost,GetConversations,sendNotification,respondToNotification,getAllNotifications}}>
             {props.children}
         </MainContext.Provider>
     )

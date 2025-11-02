@@ -4,6 +4,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ClipLoader } from 'react-spinners';
+import API_BASE_URL from '../config/api';
 
 const SignUp = ({ EditTheAlert }) => {
   const [formData, setFormData] = useState({
@@ -11,14 +12,20 @@ const SignUp = ({ EditTheAlert }) => {
     email: '',
     password: '',
     confirmPassword: '',
+    mobileNumber: '',
     aadhaar: '',
     pan: '',
+    city: '',
+    state: '',
+    country: '',
+    pinCode: '',
     profileImage: null,
   });
 
   const [consent, setConsent] = useState(false);
-  const [aadhaarVerified, setAadhaarVerified] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,47 +44,24 @@ const SignUp = ({ EditTheAlert }) => {
   const validateAadhaar = (aadhaar) => /^[0-9]{12}$/.test(aadhaar);
   const validatePAN = (pan) => /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan);
 
-  const handleVerifyAadhaar = async () => {
-    if (!validateAadhaar(formData.aadhaar)) {
-      EditTheAlert('Error', 'Aadhaar number must be 12 digits.');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // You should move this logic to your backend for security
-      const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJBbFJiNVdDbThUbTlFSl9JZk85ejA2ajlvQ3Y1MXBLS0ZrbkdiX1RCdkswIn0.eyJleHAiOjE3NDY5NDUxMzUsImlhdCI6MTc0Njk0MzkzNSwianRpIjoiZjcyMjEwYjQtNWExYS00ZDdkLTliMjktNjhhYjRlOGQwNGI3IiwiaXNzIjoiaHR0cHM6Ly9kZXYubmRobS5nb3YuaW4vYXV0aC9yZWFsbXMvY2VudHJhbC1yZWdpc3RyeSIsImF1ZCI6WyJhY2NvdW50IiwiU0JYVElEXzAwNjU3NiJdLCJzdWIiOiJlNzRiYTkzYS00YTkxLTRmOTAtYTI5OC1jZjUxNTFkMzhhZTkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJTQlhJRF8wMDgxNzUiLCJzZXNzaW9uX3N0YXRlIjoiNjdhNjYzOTAtOTVkOC00ZDIxLTkxODItMWY1NTM2OGFhY2FjIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjkwMDciXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkRJR0lfRE9DVE9SIiwiaGZyIiwiaGl1Iiwib2ZmbGluZV9hY2Nlc3MiLCJoZWFsdGhJZCIsInBociIsIk9JREMiLCJoZWFsdGhfbG9ja2VyIiwiaGlwIiwiaHBfaWQiXX0sInJlc291cmNlX2FjY2VzcyI6eyJTQlhJRF8wMDgxNzUiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfSwiU0JYVElEXzAwNjU3NiI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImNsaWVudEhvc3QiOiIxMDAuNjUuMTYwLjIxNSIsImNsaWVudElkIjoiU0JYSURfMDA4MTc1IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LXNieGlkXzAwODE3NSIsImNsaWVudEFkZHJlc3MiOiIxMDAuNjUuMTYwLjIxNSJ9.h-V2wATKsHNdhxRihmjAnHzsjAm31BIyhGw52t5mxeifdgQWNPMbSyMtLyqTD1NkINb8Pm4OgN5U44yP_XokFwZZYDXY_4jFbW9EmYlrRlSgjkmHKHhSy3DRyQF3TaXFWnWlemgkzmejU6qdqp25bBe43MeNp538TovqHFnXM-0IInIpttjKiIW8YWouVyxKBu8rQvsQIwmy555ZPuvYzZovSVPgDdkdVHJp3HqqZYC4k6rTdYkNSCuggskH7t6dO4xMKwwk2xLD94uTcg3_K1aykofyixsQiKx4kXwKv_ftQNz71kYyTzg3E49D_ubdKHwId6_HLaQ8DXA04ubIIw";
-      const response = await fetch('https://apihspsbx.abdm.gov.in/v4/int/v2/registration/aadhaar/generateOtp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json',
-          "Authorization" : `Bearer ${token}`
-         },
-        body: JSON.stringify({
-          aadhaar_number: "lr14PfSgHgUDWoXtcM6BmWaeLov0FjPPM7YlyvXWR18Ru/mLVpYbLmQucNCl6i4ebRsfK7F85N+EPVNlmT9wvAnBoWG5pHkJBao5Qr/uZxdw6MWvD2HnoPt1fCc6XmhrHYOOgurxa6sj19LiQkr4rxZxrxathU6kCnt6IAeTkM3ElfnUAcGkThZUe99xGnb6Cpq92Gv4KJS7632UT6n7z8QVNwa77GlU/nF5sQ3pAXxdkZqqnQeTzGhaaSiBM8D+7/Ma9T6K4QfiLznKeUUd52mEbM7TNMH3b1YcUjATWi17iBNfjr1I27gYmjnOpq3WOgerMZ7EsePwxHAw+8dV2w==",
-        }),
-      });
-
-      const data = await response.json();
-      if (data.id && data.url) {
-        window.open(data.url, '_blank');
-        EditTheAlert('Info', 'Complete Aadhaar OTP verification in the new window.');
-      } else {
-        EditTheAlert('Error', data.message || 'Failed to initiate Aadhaar eKYC.');
-      }
-    } catch (err) {
-      console.error('Aadhaar verification error:', err);
-      EditTheAlert('Error', 'An error occurred during Aadhaar verification.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password, confirmPassword, aadhaar, pan, profileImage } = formData;
+    const { name, email, password, confirmPassword, mobileNumber, aadhaar, pan, city, state, country, pinCode, profileImage } = formData;
 
-    if (!name || !email || !password || !confirmPassword || !aadhaar || !pan) {
+    if (!name || !email || !password || !confirmPassword || !mobileNumber || !aadhaar || !pan || !city || !state || !country || !pinCode) {
       EditTheAlert('Error', 'All fields are required.');
+      return;
+    }
+    
+    // Validate mobile number
+    if (mobileNumber.length !== 10 || !/^[0-9]{10}$/.test(mobileNumber)) {
+      EditTheAlert('Error', 'Mobile number must be 10 digits.');
+      return;
+    }
+    
+    // Validate pin code
+    if (pinCode.length !== 6 || !/^[0-9]{6}$/.test(pinCode)) {
+      EditTheAlert('Error', 'Pin code must be 6 digits.');
       return;
     }
     if (!validateAadhaar(aadhaar)) {
@@ -96,10 +80,6 @@ const SignUp = ({ EditTheAlert }) => {
       EditTheAlert('Error', 'You must consent to data storage.');
       return;
     }
-    if (!aadhaarVerified) {
-      EditTheAlert('Error', 'Please verify your Aadhaar number.');
-      return;
-    }
 
     setLoading(true);
     try {
@@ -107,11 +87,16 @@ const SignUp = ({ EditTheAlert }) => {
       data.append('name', name);
       data.append('email', email);
       data.append('password', password);
-      data.append('aadhaar', aadhaar);
-      data.append('pan', pan);
+      data.append('mobilenumber', mobileNumber);
+      data.append('aadharNumber', aadhaar);
+      data.append('panCardNumber', pan);
+      data.append('city', city);
+      data.append('state', state);
+      data.append('country', country);
+      data.append('pinCode', pinCode);
       if (profileImage) data.append('profileImage', profileImage);
 
-      const response = await fetch('https://backendofquickmoney.onrender.com/api/auth/signup', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
         method: 'POST',
         body: data,
       });
@@ -133,52 +118,214 @@ const SignUp = ({ EditTheAlert }) => {
 
   return (
     <div
-      className="container-fluid py-5"
+      className="container-fluid d-flex align-items-center justify-content-center"
       style={{
-        background: 'linear-gradient(135deg, #1e1e2f, #2a2a3d)',
+        background: 'transparent',
         minHeight: '100vh',
-        color: '#fff',
+        padding: '15px',
+        margin: '0',
+        color: '#000',
+        width: '100%',
+        overflowY: 'auto'
       }}
     >
-      <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-4" data-aos="fade-up">
-          <div className="card text-white" style={{
-            background: 'linear-gradient(135deg, #2a2a3d, #3a3a4d)',
-            border: 'none',
-            borderRadius: '15px',
-            boxShadow: '0 8px 20px rgba(0,0,0,0.3)'
-          }}>
-            <div className="card-header text-center" style={{ background: 'linear-gradient(90deg, #FFD700, #FFC107)', color: '#1e1e2f' }}>
-              <h4 className="fw-bold mb-0">Sign Up</h4>
-            </div>
-            <div className="card-body p-4">
-              <form onSubmit={handleSubmit}>
-                {[
-                  { label: 'Full Name', type: 'text', name: 'name', placeholder: 'Enter your full name' },
-                  { label: 'Email', type: 'email', name: 'email', placeholder: 'Enter your email' },
-                  { label: 'Password', type: 'password', name: 'password', placeholder: 'Enter your password' },
-                  { label: 'Confirm Password', type: 'password', name: 'confirmPassword', placeholder: 'Confirm your password' },
-                ].map(({ label, type, name, placeholder }) => (
-                  <div className="mb-3" key={name}>
-                    <label htmlFor={name} className="form-label">{label}</label>
+      <div className="card signup-card" style={{
+        background: 'transparent',
+        backdropFilter: 'blur(10px)',
+        border: '2px solid #000',
+        borderRadius: '12px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        width: '100%',
+        maxWidth: '500px',
+        padding: '24px',
+        margin: 'auto'
+      }} data-aos="fade-up">
+        <div className="text-center mb-4">
+          <h2 className="mb-0 fw-bold" style={{ fontSize: '22px', marginBottom: '6px', color: '#000' }}>
+            Create your account
+          </h2>
+            <p className="mb-0" style={{ color: '#000', fontSize: '13px', marginTop: '6px' }}>
+            Already have an account?{' '}
+            <a href="/login" style={{ color: '#667eea', textDecoration: 'none' }}>Sign in</a>
+          </p>
+        </div>
+        <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="name" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      Full Name
+                    </label>
                     <input
-                      type={type}
+                      type="text"
                       className="form-control"
-                      id={name}
-                      name={name}
-                      value={formData[name]}
+                      id="name"
+                      name="name"
+                      value={formData.name}
                       onChange={handleChange}
-                      placeholder={placeholder}
-                      style={{ background: '#1e1e2f', color: '#fff', border: '1px solid #FFD700', borderRadius: '10px' }}
+                      placeholder="John Doe"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        borderRadius: '8px',
+                        color: '#000',
+                        padding: '10px 12px',
+                        fontSize: '14px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      }}
                       required
                     />
                   </div>
-                ))}
 
-                {/* Aadhaar Input */}
-                <div className="mb-3">
-                  <label htmlFor="aadhaar" className="form-label">Aadhaar Number</label>
-                  <div className="input-group">
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="email" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="name@company.com"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        borderRadius: '8px',
+                        color: '#000',
+                        padding: '10px 12px',
+                        fontSize: '14px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      }}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-2">
+                  <label htmlFor="mobileNumber" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                    Mobile Number
+                  </label>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    id="mobileNumber"
+                    name="mobileNumber"
+                    value={formData.mobileNumber}
+                    onChange={handleChange}
+                    placeholder="9876543210"
+                    maxLength="10"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(0, 0, 0, 0.3)',
+                      borderRadius: '8px',
+                      color: '#000',
+                      padding: '10px 12px',
+                      fontSize: '14px',
+                      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                    }}
+                    required
+                  />
+                </div>
+
+                <div className="row">
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="password" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      Password
+                    </label>
+                    <div style={{ position: 'relative' }}>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className="form-control"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="••••••••"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(0, 0, 0, 0.3)',
+                          borderRadius: '8px',
+                          color: '#000',
+                          padding: '10px 45px 10px 12px',
+                          fontSize: '14px',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                        }}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                          position: 'absolute',
+                          right: '10px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          background: 'transparent',
+                          border: 'none',
+                          color: '#000',
+                          cursor: 'pointer',
+                          padding: '5px',
+                          fontSize: '16px'
+                        }}
+                      >
+                        {showPassword ? '👁️' : '👁️‍🗨️'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="confirmPassword" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      Confirm Password
+                    </label>
+                    <div style={{ position: 'relative' }}>
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        className="form-control"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        placeholder="••••••••"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(0, 0, 0, 0.3)',
+                          borderRadius: '8px',
+                          color: '#000',
+                          padding: '10px 45px 10px 12px',
+                          fontSize: '14px',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                        }}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        style={{
+                          position: 'absolute',
+                          right: '10px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          background: 'transparent',
+                          border: 'none',
+                          color: '#000',
+                          cursor: 'pointer',
+                          padding: '5px',
+                          fontSize: '16px'
+                        }}
+                      >
+                        {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Aadhaar and PAN Input */}
+                <div className="row">
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="aadhaar" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      Aadhaar Number
+                    </label>
                     <input
                       type="text"
                       className="form-control"
@@ -186,53 +333,159 @@ const SignUp = ({ EditTheAlert }) => {
                       name="aadhaar"
                       value={formData.aadhaar}
                       onChange={handleChange}
-                      placeholder="Enter 12-digit Aadhaar number"
-                      style={{ background: '#1e1e2f', color: '#fff', border: '1px solid #FFD700', borderRadius: '10px 0 0 10px' }}
+                      placeholder="Enter 12-digit Aadhaar"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        color: '#000',
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        borderRadius: '8px',
+                        padding: '10px 12px',
+                        fontSize: '14px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      }}
                       maxLength="12"
                       required
                     />
-                    <button
-                      type="button"
-                      className="btn btn-warning"
-                      onClick={handleVerifyAadhaar}
-                      disabled={loading || aadhaarVerified}
-                      style={{ borderRadius: '0 10px 10px 0' }}
-                    >
-                      {loading ? <ClipLoader color="#1e1e2f" size={20} /> : aadhaarVerified ? 'Verified' : 'Verify Aadhaar'}
-                    </button>
                   </div>
-                  {!aadhaarVerified && (
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-success mt-2"
-                      onClick={() => setAadhaarVerified(true)}
-                    >
-                      ✅ I’ve completed Aadhaar verification
-                    </button>
-                  )}
-                  {aadhaarVerified && <p className="text-success mt-2">Aadhaar verified successfully ✅</p>}
+
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="pan" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      PAN Card Number
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="pan"
+                      name="pan"
+                      value={formData.pan}
+                      onChange={handleChange}
+                      placeholder="ABCDE1234F"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        color: '#000',
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        borderRadius: '8px',
+                        padding: '10px 12px',
+                        fontSize: '14px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      }}
+                      maxLength="10"
+                      required
+                    />
+                  </div>
                 </div>
 
-                {/* PAN Input */}
-                <div className="mb-3">
-                  <label htmlFor="pan" className="form-label">PAN Card Number</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="pan"
-                    name="pan"
-                    value={formData.pan}
-                    onChange={handleChange}
-                    placeholder="Enter 10-character PAN (e.g., ABCDE1234F)"
-                    style={{ background: '#1e1e2f', color: '#fff', border: '1px solid #FFD700', borderRadius: '10px' }}
-                    maxLength="10"
-                    required
-                  />
+                {/* Address Fields */}
+                <div className="row">
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="city" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="city"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleChange}
+                      placeholder="Enter your city"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        color: '#000',
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        borderRadius: '8px',
+                        padding: '10px 12px',
+                        fontSize: '14px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      }}
+                      required
+                    />
+                  </div>
+
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="state" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      State
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="state"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleChange}
+                      placeholder="Enter your state"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        color: '#000',
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        borderRadius: '8px',
+                        padding: '10px 12px',
+                        fontSize: '14px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      }}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="country" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      Country
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="country"
+                      name="country"
+                      value={formData.country}
+                      onChange={handleChange}
+                      placeholder="Enter your country"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        color: '#000',
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        borderRadius: '8px',
+                        padding: '10px 12px',
+                        fontSize: '14px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      }}
+                      required
+                    />
+                  </div>
+
+                  <div className="col-12 col-md-6 mb-2">
+                    <label htmlFor="pinCode" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                      Pin Code
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="pinCode"
+                      name="pinCode"
+                      value={formData.pinCode}
+                      onChange={handleChange}
+                      placeholder="123456"
+                      maxLength="6"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        color: '#000',
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        borderRadius: '8px',
+                        padding: '10px 12px',
+                        fontSize: '14px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      }}
+                      required
+                    />
+                  </div>
                 </div>
 
                 {/* Profile Image Upload */}
-                <div className="mb-3">
-                  <label htmlFor="profileImage" className="form-label">Profile Image (optional)</label>
+                <div className="mb-2">
+                  <label htmlFor="profileImage" className="form-label mb-1" style={{ fontSize: '14px', fontWeight: '500', color: '#000' }}>
+                    Profile Image (optional)
+                  </label>
                   <input
                     type="file"
                     className="form-control"
@@ -240,7 +493,15 @@ const SignUp = ({ EditTheAlert }) => {
                     name="profileImage"
                     accept="image/*"
                     onChange={handleChange}
-                    style={{ background: '#1e1e2f', color: '#fff', border: '1px solid #FFD700', borderRadius: '10px' }}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: '#000',
+                      border: '1px solid rgba(0, 0, 0, 0.3)',
+                      borderRadius: '8px',
+                      padding: '10px 12px',
+                      fontSize: '14px',
+                      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                    }}
                   />
                 </div>
 
@@ -252,24 +513,62 @@ const SignUp = ({ EditTheAlert }) => {
                     id="consent"
                     checked={consent}
                     onChange={(e) => setConsent(e.target.checked)}
+                    style={{ 
+                      backgroundColor: consent ? '#000' : 'rgba(255, 255, 255, 0.05)',
+                      borderColor: 'rgba(0, 0, 0, 0.5)',
+                      borderWidth: '2px',
+                      accentColor: '#000',
+                      cursor: 'pointer'
+                    }}
                   />
-                  <label className="form-check-label" htmlFor="consent">
+                  <label className="form-check-label" htmlFor="consent" style={{ fontSize: '14px', color: '#000', cursor: 'pointer' }}>
                     I consent to my data being stored per DPDP Act, 2023.
                   </label>
                 </div>
 
-                <button type="submit" className="btn btn-success w-100" disabled={loading} style={{ borderRadius: '10px' }}>
-                  {loading ? <ClipLoader color="#fff" size={20} /> : 'Sign Up'}
+                <button 
+                  type="submit" 
+                  className="btn w-100" 
+                  disabled={loading} 
+                  style={{ 
+                    background: loading 
+                      ? 'linear-gradient(135deg, #999 0%, #777 100%)' 
+                      : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: loading ? '#ccc' : '#fff',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    transition: 'all 0.2s ease',
+                    border: 'none',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!loading) {
+                      e.currentTarget.style.opacity = '0.9';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.opacity = '1';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  {loading ? (
+                    <>
+                      <ClipLoader color="#fff" size={16} />
+                      <span>Signing up...</span>
+                    </>
+                  ) : (
+                    'Sign up'
+                  )}
                 </button>
-              </form>
-            </div>
-            <div className="card-footer text-center" style={{ background: '#2a2a3d', borderRadius: '0 0 15px 15px' }}>
-              <p className="mb-0">
-                Already have an account? <a href="/login" className="text-warning">Log In</a>
-              </p>
-            </div>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   );

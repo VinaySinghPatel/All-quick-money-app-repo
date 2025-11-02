@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 const VerifyUser = (props) => {
   const [showOtpSection, setShowOtpSection] = useState(false);
@@ -19,7 +20,7 @@ const VerifyUser = (props) => {
    
     e.preventDefault();
     try {
-      let response = await fetch('https://backendofquickmoney.onrender.com/api/otp/send-otp', {
+      let response = await fetch(`${API_BASE_URL}/api/otp/send-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -45,7 +46,7 @@ const VerifyUser = (props) => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      let response = await fetch('https://backendofquickmoney.onrender.com/api/otp/verify-otp', {
+      let response = await fetch(`${API_BASE_URL}/api/otp/verify-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
